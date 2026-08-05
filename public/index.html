@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Is It Down Right Now? — Live Reachability Check</title>
+<meta name="description" content="Enter any URL for an instant live reachability check — a real HTTP probe with accurate latency and HTTP status." />
+
+<!-- ADSENSE: once your AdSense account is approved, paste the verification/script snippet here -->
+
+<style>
+  :root {
+    --bg: #05070a;
+    --panel: #0b0f16;
+    --border: #1c2430;
+    --text: #e7edf3;
+    --muted: #7c8896;
+    --accent: #22d3ee;
+    --accent-dim: rgba(34, 211, 238, 0.15);
+    --up: #34d399;
+    --down: #f87171;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 90px 20px 60px;
+    background:
+      radial-gradient(600px 300px at 50% 0%, rgba(34,211,238,0.08), transparent 70%),
+      var(--bg);
+  }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+  }
+  h1 {
+    font-size: clamp(36px, 7vw, 56px);
+    font-weight: 800;
+    text-align: center;
+    line-height: 1.1;
+    margin: 0;
+  }
+  h1 .glow {
+    color: var(--accent);
+    text-shadow: 0 0 30px rgba(34,211,238,0.5);
+  }
+  p.sub {
+    max-width: 560px;
+    text-align: center;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 24px 0 40px;
+    font-size: 15px;
+  }
+  form.check {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    gap: 10px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 8px;
+    box-shadow: 0 0 40px rgba(34,211,238,0.06);
+  }
+  form.check input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 16px;
+    padding: 12px 14px;
+  }
+  form.check input::placeholder { color: var(--muted); }
+  form.check button {
+    background: var(--accent);
+    color: #04141a;
+    border: none;
+    border-radius: 10px;
+    padding: 0 22px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  form.check button:hover { filter: brightness(1.08); }
+  form.check button:disabled { opacity: 0.6; cursor: default; }
+
+  .hint {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  #result {
+    width: 100%;
+    max-width: 640px;
+    margin-top: 28px;
+  }
+  .card {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    border-radius: 14px;
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    padding: 6px 14px;
+    border-radius: 999px;
+  }
+  .status-pill.up { background: rgba(52,211,153,0.12); color: var(--up); }
+  .status-pill.down { background: rgba(248,113,113,0.12); color: var(--down); }
+  .status-pill .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+
+  .metrics {
+    display: flex;
+    gap: 24px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .metrics b { color: var(--text); font-size: 14px; }
+  .target-url {
+    width: 100%;
+    font-size: 13px;
+    color: var(--muted);
+    word-break: break-all;
+    margin-bottom: 10px;
+  }
+
+  .examples {
+    display: flex;
+    gap: 10px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .examples button {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 7px 16px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .examples button:hover { border-color: var(--accent); color: var(--text); }
+
+  /* Placeholder region for an ad unit once AdSense is approved */
+  #ad-slot {
+    width: 100%;
+    max-width: 640px;
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="eyebrow"><span class="dot"></span> LIVE GLOBAL REACHABILITY · DIRECT PROBE FROM OUR NETWORK</div>
+
+  <h1>Is it down<br /><span class="glow">right now?</span></h1>
+
+  <p class="sub">
+    Enter any URL for an instant live reachability check — a real HTTP probe
+    from our servers, with accurate latency and HTTP status in seconds.
+  </p>
+
+  <form class="check" id="checkForm">
+    <input type="text" id="urlInput" placeholder="example.com" autocomplete="off" />
+    <button type="submit" id="checkBtn">Check</button>
+  </form>
+  <div class="hint">A URL is the address of a website, like https://example.com</div>
+
+  <div class="examples">
+    <button type="button" data-url="google.com">google.com</button>
+    <button type="button" data-url="github.com">github.com</button>
+    <button type="button" data-url="cloudflare.com">cloudflare.com</button>
+  </div>
+
+  <div id="result"></div>
+
+  <!-- <div id="ad-slot"> AdSense <ins> tag goes here once approved </div> -->
+
+<script>
+  const form = document.getElementById('checkForm');
+  const input = document.getElementById('urlInput');
+  const btn = document.getElementById('checkBtn');
+  const resultEl = document.getElementById('result');
+  const exampleBtns = document.querySelectorAll('.examples button');
+
+  exampleBtns.forEach(b => {
+    b.addEventListener('click', () => {
+      input.value = b.dataset.url;
+      form.requestSubmit();
+    });
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const url = input.value.trim();
+    if (!url) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Checking...';
+    resultEl.innerHTML = '';
+
+    try {
+      const res = await fetch('/api/check?url=' + encodeURIComponent(url));
+      const data = await res.json();
+
+      if (data.error && !('up' in data)) {
+        resultEl.innerHTML = `<div class="card">${escapeHtml(data.error)}</div>`;
+        return;
+      }
+
+      const pillClass = data.up ? 'up' : 'down';
+      const pillText = data.up ? 'UP' : 'DOWN';
+
+      resultEl.innerHTML = `
+        <div class="card">
+          <div class="target-url">${escapeHtml(data.url)}</div>
+          <span class="status-pill ${pillClass}"><span class="dot"></span>${pillText}</span>
+          <div class="metrics">
+            <div>Status <br/><b>${data.status ?? '—'}</b></div>
+            <div>Latency <br/><b>${data.latency} ms</b></div>
+          </div>
+        </div>
+      `;
+    } catch (err) {
+      resultEl.innerHTML = `<div class="card">Something went wrong. Try again.</div>`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Check';
+    }
+  });
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+</script>
+
+</body>
+</html>
