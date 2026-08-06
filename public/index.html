@@ -187,6 +187,41 @@
     max-width: 640px;
     margin-top: 40px;
   }
+
+  .info-section {
+    width: 100%;
+    max-width: 640px;
+    margin-top: 56px;
+  }
+  .info-section h2 {
+    font-size: 20px;
+    margin: 0 0 14px;
+    color: var(--text);
+  }
+  .info-section p {
+    color: var(--muted);
+    line-height: 1.7;
+    font-size: 14.5px;
+    margin: 0 0 14px;
+  }
+  .fix-list {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--muted);
+    line-height: 1.7;
+    font-size: 14.5px;
+  }
+  .fix-list li { margin-bottom: 12px; }
+  .fix-list li strong { color: var(--text); }
+  .see-fixes {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .see-fixes:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -215,6 +250,38 @@
   <div id="result"></div>
 
   <!-- <div id="ad-slot"> AdSense <ins> tag goes here once approved </div> -->
+
+  <section class="info-section" id="how-it-works">
+    <h2>How this works</h2>
+    <p>
+      When you enter a URL, our server sends a real HTTP request directly to
+      that site — the same kind of request a browser makes — and measures
+      how long it takes to respond and what status code it returns. Because
+      the check runs from our servers rather than your browser, it isn't
+      affected by your own internet connection, VPN, or local network
+      restrictions.
+    </p>
+    <p>
+      A site showing "down" here means our server couldn't get a successful
+      response within 10 seconds. That's usually a strong signal something
+      is actually wrong, though a single check can occasionally catch a
+      temporary blip. If you're not sure, run the check again after a
+      minute.
+    </p>
+  </section>
+
+  <section class="info-section" id="fix-guide">
+    <h2>Common reasons a site might be down (and how to fix it)</h2>
+    <ol class="fix-list">
+      <li><strong>DNS not resolving.</strong> The domain isn't pointing anywhere valid. Check your nameservers and DNS records at your registrar or DNS provider, and confirm any recent changes have finished propagating.</li>
+      <li><strong>Hosting or server outage.</strong> Your hosting provider may be having downtime. Check their status page, or log into your server or hosting dashboard directly.</li>
+      <li><strong>Expired domain.</strong> If a domain isn't renewed in time, it stops resolving entirely. Check the expiration date in your registrar account.</li>
+      <li><strong>SSL certificate problems.</strong> An expired or misconfigured certificate can make browsers refuse to load the site. Renew or reissue the certificate through your host or certificate provider.</li>
+      <li><strong>Firewall or security rules blocking traffic.</strong> Overly strict firewall, rate-limiting, or bot-protection rules can accidentally block real visitors too. Review any recent changes to your firewall or security settings.</li>
+      <li><strong>Server overload.</strong> A sudden traffic spike can exhaust server resources. Check your server's CPU and memory usage, and consider caching or scaling up.</li>
+      <li><strong>Recent DNS or hosting migration.</strong> If you recently moved hosts or changed DNS providers, double-check the A and CNAME records actually point to the new server.</li>
+    </ol>
+  </section>
 
 <script>
   const form = document.getElementById('checkForm');
@@ -250,6 +317,9 @@
 
       const pillClass = data.up ? 'up' : 'down';
       const pillText = data.up ? 'UP' : 'DOWN';
+      const downHint = !data.up
+        ? `<a href="#fix-guide" class="see-fixes">See common causes &amp; how to fix them ↓</a>`
+        : '';
 
       resultEl.innerHTML = `
         <div class="card">
@@ -259,6 +329,7 @@
             <div>Status <br/><b>${data.status ?? '—'}</b></div>
             <div>Latency <br/><b>${data.latency} ms</b></div>
           </div>
+          ${downHint}
         </div>
       `;
     } catch (err) {
