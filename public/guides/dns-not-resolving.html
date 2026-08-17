@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DNS Not Resolving: Why Your Domain Won't Load | Is It Down Right Now?</title>
+<meta name="description" content="Your domain's DNS records aren't pointing anywhere valid, so browsers can't find the server. Here's how to diagnose and fix it.">
+<link rel="canonical" href="https://isitdownnow.site/guides/dns-not-resolving.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+:root{
+  --bg:#05070a;
+  --surface:#0b0f16;
+  --surface-2:#101623;
+  --border:#1c2430;
+  --text:#e7edf3;
+  --muted:#7c8896;
+  --ok:#22d3ee;
+  --warn:#fbbf24;
+  --alert:#f87171;
+  --link:#22d3ee;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+  line-height:1.6;
+}
+.mono{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;}
+a{color:var(--link);text-decoration:none;}
+a:hover{text-decoration:underline;}
+a:focus-visible, button:focus-visible{outline:2px solid var(--ok);outline-offset:2px;}
+
+.wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+
+header.site{
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(34,211,238,0.06),transparent);
+}
+.nav{
+  max-width:760px;margin:0 auto;padding:18px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.brand{
+  font-weight:700;font-size:15px;letter-spacing:-0.01em;color:var(--text);
+  display:flex;align-items:center;gap:8px;
+}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);}
+.navlinks{display:flex;gap:22px;font-size:14px;flex-wrap:wrap;}
+.navlinks a{color:var(--muted);}
+.navlinks a.active,.navlinks a:hover{color:var(--text);}
+
+main{padding:48px 0 64px;}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--ok);background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.25);
+  padding:5px 12px;border-radius:999px;margin-bottom:18px;
+}
+.eyebrow.warn{color:var(--warn);background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.25);}
+.eyebrow.alert{color:var(--alert);background:rgba(248,113,113,0.08);border-color:rgba(248,113,113,0.25);}
+
+h1{
+  font-size:clamp(28px,4vw,38px);
+  line-height:1.15;letter-spacing:-0.02em;margin:0 0 14px;
+}
+h2{font-size:22px;margin:40px 0 12px;letter-spacing:-0.01em;}
+h3{font-size:17px;margin:24px 0 8px;color:var(--text);}
+p{color:#C7D0DB;margin:0 0 16px;}
+.lede{font-size:18px;color:var(--muted);margin-bottom:8px;}
+
+.probe{
+  font-family:"JetBrains Mono",monospace;font-size:13px;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:16px 18px;margin:20px 0 28px;overflow-x:auto;
+}
+.probe .ln{white-space:pre;color:var(--muted);}
+.probe .ln .status-ok{color:var(--ok);}
+.probe .ln .status-warn{color:var(--warn);}
+.probe .ln .status-alert{color:var(--alert);}
+
+ul,ol{color:#C7D0DB;padding-left:22px;}
+li{margin-bottom:8px;}
+
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:20px 22px;margin:18px 0;
+}
+.checklist{list-style:none;padding-left:0;}
+.checklist li{
+  position:relative;padding-left:28px;
+}
+.checklist li::before{
+  content:"›";position:absolute;left:0;top:0;color:var(--ok);font-weight:700;
+}
+
+.guide-grid{display:grid;gap:14px;margin-top:24px;}
+.guide-card{
+  display:block;background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:18px 20px;color:var(--text);
+}
+.guide-card:hover{border-color:var(--ok);text-decoration:none;}
+.guide-card .tag{
+  font-size:11px;color:var(--muted);text-transform:uppercase;
+  display:block;margin-bottom:6px;letter-spacing:1px;font-weight:600;
+}
+.guide-card h3{margin:0 0 6px;font-size:16px;}
+.guide-card p{margin:0;font-size:14px;color:var(--muted);}
+
+.back{display:inline-block;margin-bottom:24px;font-size:14px;color:var(--muted);}
+.back:hover{color:var(--text);}
+
+footer{
+  border-top:1px solid var(--border);padding:32px 0;color:var(--muted);font-size:13px;
+}
+footer .foot-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+footer a{color:var(--muted);}
+footer a:hover{color:var(--text);}
+
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;}
+.btn{
+  font-size:14px;font-weight:600;
+  padding:10px 18px;border-radius:10px;border:1px solid var(--border);color:var(--text);
+}
+.btn.primary{background:var(--ok);color:#04141a;border-color:var(--ok);font-weight:700;}
+.btn.primary:hover{text-decoration:none;filter:brightness(1.08);}
+.btn:hover{border-color:var(--muted);text-decoration:none;}
+
+@media (max-width:600px){
+  .nav{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav">
+    <a class="brand" href="/">
+      <span class="dot"></span> isitdownnow.site
+    </a>
+    <nav class="navlinks">
+      <a href="/">Home</a>
+      <a href="/guides.html" class="active">Guides</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <a class="back" href="/guides.html">&larr; All guides</a>
+    <span class="eyebrow alert">DNS &middot; NXDOMAIN</span>
+    <h1>DNS Not Resolving: Why Your Domain Won't Load</h1>
+    <div class="probe">
+    <span class="ln">$ dig example.com +short</span>
+    <span class="ln"></span>
+    <span class="ln"><span class="status-alert">(no output — NXDOMAIN)</span></span>
+    </div>
+    
+<p class="lede">If a site "won't load" and the browser tab spins forever or shows
+"This site can't be reached," DNS is one of the first things worth ruling out.
+Before your browser can even talk to a server, it has to translate a domain
+name like <code>example.com</code> into an IP address &mdash; and if that
+lookup fails, nothing else matters.</p>
+
+<h2>What's actually happening</h2>
+<p>Every domain has nameservers on file with its registrar, and those
+nameservers hold DNS records (A, AAAA, CNAME, and others) that map the domain
+to an IP address. When DNS "isn't resolving," one of a few things is usually
+true: the nameservers themselves aren't responding, the required records were
+never created, a recent change hasn't finished propagating, or the domain is
+pointed at nameservers that no longer control anything.</p>
+
+<h2>How to check it</h2>
+<ul>
+  <li>Run this checker against your domain and see whether it reports a DNS
+  failure specifically, rather than a timeout after connecting.</li>
+  <li>Use a terminal command like <span class="mono">dig yourdomain.com</span>
+  or <span class="mono">nslookup yourdomain.com</span> and look for an empty
+  answer section or an NXDOMAIN response.</li>
+  <li>Try a third-party DNS propagation checker to see whether the record is
+  visible from multiple regions, or only some.</li>
+</ul>
+
+<h2>Common causes, and the fix for each</h2>
+
+<h3>Nameservers point to the wrong provider</h3>
+<p>If you moved your DNS management (say, from your registrar to Cloudflare)
+but never updated the nameservers at the registrar, the domain is still
+asking the old provider for records that don't exist there anymore. Log in to
+your registrar and confirm the nameservers listed match where your DNS is
+actually managed.</p>
+
+<h3>The record was never created, or was deleted</h3>
+<p>A missing A record (for IPv4) or AAAA record (for IPv6) at the apex domain
+or a missing CNAME for a subdomain like <span class="mono">www</span> is one
+of the most common causes for a brand-new site. Check your DNS provider's
+dashboard directly rather than assuming the record exists.</p>
+
+<h3>Propagation hasn't finished</h3>
+<p>DNS changes aren't instant. Depending on the TTL (time-to-live) set on the
+previous record, it can take anywhere from a few minutes to 48 hours for
+changes to be visible everywhere. If you just made a change, that's often
+simply the wait.</p>
+
+<h3>A typo in the record</h3>
+<p>A single wrong character in an IP address or a CNAME target is enough to
+break resolution entirely. Double-check the exact value against what your
+host or platform documentation specifies.</p>
+
+<div class="card">
+  <strong>Quick checklist</strong>
+  <ul class="checklist">
+    <li>Confirm nameservers at the registrar match your actual DNS provider</li>
+    <li>Confirm the A/AAAA/CNAME record exists and has the correct value</li>
+    <li>Check the TTL and allow time for propagation after any change</li>
+    <li>Test from a couple of different networks or a propagation checker</li>
+  </ul>
+</div>
+
+    <div class="cta-row">
+      <a class="btn primary" href="/">Run a live check &rarr;</a>
+      <a class="btn" href="/guides.html">More guides</a>
+    </div>
+    
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <span>Is It Down Right Now? &middot; &copy; 2026. All rights reserved.</span>
+    <span>
+      <a href="/privacy.html">Privacy Policy</a> &middot;
+      <a href="/contact.html">Contact</a> &middot;
+      <a href="/guides.html">Guides</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>
