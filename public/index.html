@@ -234,6 +234,31 @@
   }
   .see-fixes:hover { text-decoration: underline; }
 
+  .guides-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+    padding: 16px 20px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    text-decoration: none;
+    transition: border-color 0.15s ease;
+  }
+  .guides-cta:hover { border-color: var(--accent); }
+  .guides-cta span {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .guides-cta strong {
+    color: var(--accent);
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
   .site-footer {
     width: 100%;
     max-width: 640px;
@@ -331,6 +356,11 @@
       <li><strong>Server overload.</strong> A sudden traffic spike can exhaust server resources. Check your server's CPU and memory usage, and consider caching or scaling up.</li>
       <li><strong>Recent DNS or hosting migration.</strong> If you recently moved hosts or changed DNS providers, double-check the A and CNAME records actually point to the new server.</li>
     </ol>
+
+    <a href="/guides.html" class="guides-cta">
+      <span>Want the full step-by-step version of each fix?</span>
+      <strong>Browse the guides &rarr;</strong>
+    </a>
   </section>
 
   <footer class="site-footer">
@@ -347,7 +377,6 @@
       <a href="/">Home</a>
       <a href="#how-it-works">How It Works</a>
       <a href="#fix-guide">Troubleshooting</a>
-      <a href="/guides.html">Guides</a>
       <a href="/about.html">About</a>
       <a href="/contact.html">Contact</a>
       <a href="/privacy.html">Privacy Policy</a>
