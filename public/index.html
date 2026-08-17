@@ -268,6 +268,33 @@
     line-height: 1.5;
   }
 
+  .guides-hub { margin-top: 56px; }
+  .guides-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(34,211,238,0.08);
+    border: 1px solid rgba(34,211,238,0.3);
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+  }
+  .guides-heading {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--text);
+    margin: 0 0 12px;
+  }
+  .guides-sub {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.7;
+    margin: 0 0 24px;
+  }
+
   .site-footer {
     width: 100%;
     max-width: 640px;
@@ -365,25 +392,50 @@
       <li><strong>Server overload.</strong> A sudden traffic spike can exhaust server resources. Check your server's CPU and memory usage, and consider caching or scaling up.</li>
       <li><strong>Recent DNS or hosting migration.</strong> If you recently moved hosts or changed DNS providers, double-check the A and CNAME records actually point to the new server.</li>
     </ol>
+  </section>
+
+  <section class="info-section guides-hub">
+    <span class="guides-eyebrow">GUIDES</span>
+    <h2 class="guides-heading">Troubleshooting guides</h2>
+    <p class="guides-sub">Seven concrete reasons a site goes down, and exactly what to check for each one. Start with a live check, then work through the guide that matches what you're seeing.</p>
 
     <div class="guides-preview">
       <a href="/guides/dns-not-resolving.html" class="guide-tile">
         <span class="guide-tag">DNS</span>
         <strong>DNS not resolving</strong>
-        <span class="guide-desc">Diagnose and fix records that aren't pointing anywhere valid.</span>
+        <span class="guide-desc">Your domain's DNS records aren't pointing anywhere valid, so browsers can't find the server. Here's how to diagnose and fix it.</span>
       </a>
       <a href="/guides/hosting-server-outage.html" class="guide-tile">
         <span class="guide-tag">HOSTING</span>
         <strong>Hosting or server outage</strong>
-        <span class="guide-desc">Confirm it's your host, and what to do while you wait it out.</span>
+        <span class="guide-desc">DNS resolves fine but the site still won't load. Here's how to confirm it's your host, and what to do while you wait it out.</span>
+      </a>
+      <a href="/guides/expired-domain.html" class="guide-tile">
+        <span class="guide-tag">REGISTRAR</span>
+        <strong>Expired domain</strong>
+        <span class="guide-desc">An expired domain doesn't just misbehave, it stops resolving entirely. Here's how to tell, and how domain expiry actually works.</span>
       </a>
       <a href="/guides/ssl-certificate-problems.html" class="guide-tile">
         <span class="guide-tag">TLS/SSL</span>
         <strong>SSL certificate problems</strong>
-        <span class="guide-desc">Figure out which certificate issue is blocking the connection.</span>
+        <span class="guide-desc">An expired, misconfigured, or mismatched certificate makes browsers refuse the connection outright. Here's how to diagnose which.</span>
+      </a>
+      <a href="/guides/firewall-blocking-traffic.html" class="guide-tile">
+        <span class="guide-tag">SECURITY</span>
+        <strong>Firewall blocking traffic</strong>
+        <span class="guide-desc">Sometimes a site isn't down at all — a firewall, WAF, or bot-protection rule is blocking legitimate visitors by mistake.</span>
+      </a>
+      <a href="/guides/server-overload.html" class="guide-tile">
+        <span class="guide-tag">PERFORMANCE</span>
+        <strong>Server overload</strong>
+        <span class="guide-desc">A sudden spike in visitors can exhaust a server's resources faster than it can respond. Here's how to spot it and what helps.</span>
+      </a>
+      <a href="/guides/dns-hosting-migration.html" class="guide-tile">
+        <span class="guide-tag">MIGRATION</span>
+        <strong>Recent DNS or hosting migration</strong>
+        <span class="guide-desc">A site that works intermittently right after a move between hosts is almost always a propagation issue, not a broken migration.</span>
       </a>
     </div>
-    <a href="/guides.html" class="see-fixes" style="margin-top:14px;">See all 7 guides &rarr;</a>
   </section>
 
   <footer class="site-footer">
