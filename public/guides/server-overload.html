@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Server Overload: When Traffic Spikes Take a Site Down | Is It Down Right Now?</title>
+<meta name="description" content="A sudden spike in visitors can exhaust a server's resources faster than it can respond. Here's how to spot it and what helps.">
+<link rel="canonical" href="https://isitdownnow.site/guides/server-overload.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+:root{
+  --bg:#0B0F14;
+  --surface:#121821;
+  --surface-2:#171F2B;
+  --border:#212B38;
+  --text:#E7ECF2;
+  --muted:#8A97A8;
+  --ok:#3DDC97;
+  --warn:#F5A623;
+  --alert:#FF5D5D;
+  --link:#6FB4FF;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Helvetica,Arial,sans-serif;
+  line-height:1.6;
+}
+.mono{font-family:"JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;}
+a{color:var(--link);text-decoration:none;}
+a:hover{text-decoration:underline;}
+a:focus-visible, button:focus-visible{outline:2px solid var(--ok);outline-offset:2px;}
+
+.wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+
+header.site{
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(61,220,151,0.05),transparent);
+}
+.nav{
+  max-width:760px;margin:0 auto;padding:18px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.brand{
+  font-family:"JetBrains Mono",monospace;
+  font-weight:700;font-size:15px;letter-spacing:-0.01em;color:var(--text);
+  display:flex;align-items:center;gap:8px;
+}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);}
+.navlinks{display:flex;gap:22px;font-size:14px;flex-wrap:wrap;}
+.navlinks a{color:var(--muted);}
+.navlinks a.active,.navlinks a:hover{color:var(--text);}
+
+main{padding:48px 0 64px;}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:0.06em;
+  color:var(--ok);background:rgba(61,220,151,0.08);border:1px solid rgba(61,220,151,0.25);
+  padding:5px 10px;border-radius:4px;margin-bottom:18px;
+}
+.eyebrow.warn{color:var(--warn);background:rgba(245,166,35,0.08);border-color:rgba(245,166,35,0.25);}
+.eyebrow.alert{color:var(--alert);background:rgba(255,93,93,0.08);border-color:rgba(255,93,93,0.25);}
+
+h1{
+  font-size:clamp(28px,4vw,38px);
+  line-height:1.15;letter-spacing:-0.02em;margin:0 0 14px;
+}
+h2{font-size:22px;margin:40px 0 12px;letter-spacing:-0.01em;}
+h3{font-size:17px;margin:24px 0 8px;color:var(--text);}
+p{color:#C7D0DB;margin:0 0 16px;}
+.lede{font-size:18px;color:var(--muted);margin-bottom:8px;}
+
+.probe{
+  font-family:"JetBrains Mono",monospace;font-size:13px;
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:16px 18px;margin:20px 0 28px;overflow-x:auto;
+}
+.probe .ln{white-space:pre;color:var(--muted);}
+.probe .ln .status-ok{color:var(--ok);}
+.probe .ln .status-warn{color:var(--warn);}
+.probe .ln .status-alert{color:var(--alert);}
+
+ul,ol{color:#C7D0DB;padding-left:22px;}
+li{margin-bottom:8px;}
+
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:20px 22px;margin:18px 0;
+}
+.checklist{list-style:none;padding-left:0;}
+.checklist li{
+  position:relative;padding-left:28px;
+}
+.checklist li::before{
+  content:"›";position:absolute;left:0;top:0;color:var(--ok);font-weight:700;
+  font-family:"JetBrains Mono",monospace;
+}
+
+.guide-grid{display:grid;gap:14px;margin-top:24px;}
+.guide-card{
+  display:block;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;color:var(--text);
+}
+.guide-card:hover{border-color:var(--ok);text-decoration:none;}
+.guide-card .tag{
+  font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);
+  display:block;margin-bottom:6px;letter-spacing:0.04em;
+}
+.guide-card h3{margin:0 0 6px;font-size:16px;}
+.guide-card p{margin:0;font-size:14px;color:var(--muted);}
+
+.back{display:inline-block;margin-bottom:24px;font-size:14px;color:var(--muted);}
+.back:hover{color:var(--text);}
+
+footer{
+  border-top:1px solid var(--border);padding:32px 0;color:var(--muted);font-size:13px;
+}
+footer .foot-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+footer a{color:var(--muted);}
+footer a:hover{color:var(--text);}
+
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;}
+.btn{
+  font-family:"JetBrains Mono",monospace;font-size:13px;
+  padding:10px 16px;border-radius:6px;border:1px solid var(--border);color:var(--text);
+}
+.btn.primary{background:var(--ok);color:#06140D;border-color:var(--ok);font-weight:700;}
+.btn.primary:hover{text-decoration:none;opacity:0.9;}
+.btn:hover{border-color:var(--muted);text-decoration:none;}
+
+@media (max-width:600px){
+  .nav{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav">
+    <a class="brand" href="/">
+      <span class="dot"></span> isitdownnow.site
+    </a>
+    <nav class="navlinks">
+      <a href="/">Home</a>
+      <a href="/guides.html" class="active">Guides</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <a class="back" href="/guides.html">&larr; All guides</a>
+    <span class="eyebrow warn">PERFORMANCE &middot; 504 Gateway Timeout</span>
+    <h1>Server Overload: When Traffic Spikes Take a Site Down</h1>
+    <div class="probe">
+    <span class="ln">$ curl -I https://example.com</span>
+    <span class="ln"><span class="status-warn">HTTP/1.1 504 Gateway Timeout</span></span>
+    </div>
+    
+<p class="lede">Sometimes a site isn't misconfigured at all &mdash; it's just
+getting more traffic than the server can handle at once, and requests start
+timing out or failing under the load.</p>
+
+<h2>What this tends to look like</h2>
+<ul>
+  <li>The site loads slowly before eventually failing, rather than failing
+  immediately</li>
+  <li>Errors like 502 Bad Gateway or 504 Gateway Timeout, especially from a
+  reverse proxy in front of the actual application</li>
+  <li>The timing lines up with a traffic spike &mdash; a link going viral, a
+  marketing push, or a bot crawl</li>
+</ul>
+
+<h2>How to confirm it</h2>
+<p>If you have access to server monitoring, check CPU usage, memory usage,
+and open connection counts around the time the issue started. A sudden
+climb to the ceiling on any of these, correlated with a traffic increase in
+your analytics, is a strong signal.</p>
+
+<h2>What helps, from quick fixes to longer-term ones</h2>
+<h3>Immediate relief</h3>
+<ul>
+  <li>Restart the application process if it's become unresponsive rather
+  than genuinely out of capacity</li>
+  <li>Temporarily scale up server resources if your host allows it on
+  demand</li>
+  <li>Enable or check caching so repeat requests for the same page don't
+  each hit the application server</li>
+</ul>
+
+<h3>Structural fixes</h3>
+<ul>
+  <li><strong>Put a CDN in front of static content</strong> so images,
+  CSS, and unchanging pages are served without touching your origin server
+  at all.</li>
+  <li><strong>Add caching at the application or page level</strong> for
+  content that doesn't change on every request.</li>
+  <li><strong>Move to auto-scaling infrastructure</strong> if traffic spikes
+  are a recurring pattern rather than a one-off.</li>
+  <li><strong>Optimize slow database queries or endpoints</strong> that are
+  disproportionately expensive per request, since those are often the real
+  bottleneck rather than raw traffic volume.</li>
+</ul>
+
+<div class="card">
+  <strong>Quick checklist</strong>
+  <ul class="checklist">
+    <li>Check CPU, memory, and connection counts around the failure window</li>
+    <li>Correlate the timing against a traffic spike in analytics</li>
+    <li>Add or verify caching and a CDN for static content</li>
+    <li>Consider auto-scaling if spikes recur</li>
+  </ul>
+</div>
+
+    <div class="cta-row">
+      <a class="btn primary" href="/">Run a live check &rarr;</a>
+      <a class="btn" href="/guides.html">More guides</a>
+    </div>
+    
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <span>Is It Down Right Now? &middot; &copy; 2026. All rights reserved.</span>
+    <span>
+      <a href="/privacy.html">Privacy Policy</a> &middot;
+      <a href="/contact.html">Contact</a> &middot;
+      <a href="/guides.html">Guides</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>
