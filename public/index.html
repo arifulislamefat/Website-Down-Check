@@ -234,29 +234,38 @@
   }
   .see-fixes:hover { text-decoration: underline; }
 
-  .guides-cta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
+  .guides-preview {
+    display: grid;
+    gap: 12px;
     margin-top: 24px;
-    padding: 16px 20px;
+  }
+  .guide-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 18px;
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 14px;
     text-decoration: none;
     transition: border-color 0.15s ease;
   }
-  .guides-cta:hover { border-color: var(--accent); }
-  .guides-cta span {
+  .guide-tile:hover { border-color: var(--accent); text-decoration: none; }
+  .guide-tile .guide-tag {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
     color: var(--muted);
-    font-size: 14px;
+    font-weight: 600;
   }
-  .guides-cta strong {
-    color: var(--accent);
-    font-size: 14px;
-    white-space: nowrap;
+  .guide-tile strong {
+    font-size: 15.5px;
+    color: var(--text);
+  }
+  .guide-tile .guide-desc {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.5;
   }
 
   .site-footer {
@@ -357,10 +366,24 @@
       <li><strong>Recent DNS or hosting migration.</strong> If you recently moved hosts or changed DNS providers, double-check the A and CNAME records actually point to the new server.</li>
     </ol>
 
-    <a href="/guides.html" class="guides-cta">
-      <span>Want the full step-by-step version of each fix?</span>
-      <strong>Browse the guides &rarr;</strong>
-    </a>
+    <div class="guides-preview">
+      <a href="/guides/dns-not-resolving.html" class="guide-tile">
+        <span class="guide-tag">DNS</span>
+        <strong>DNS not resolving</strong>
+        <span class="guide-desc">Diagnose and fix records that aren't pointing anywhere valid.</span>
+      </a>
+      <a href="/guides/hosting-server-outage.html" class="guide-tile">
+        <span class="guide-tag">HOSTING</span>
+        <strong>Hosting or server outage</strong>
+        <span class="guide-desc">Confirm it's your host, and what to do while you wait it out.</span>
+      </a>
+      <a href="/guides/ssl-certificate-problems.html" class="guide-tile">
+        <span class="guide-tag">TLS/SSL</span>
+        <strong>SSL certificate problems</strong>
+        <span class="guide-desc">Figure out which certificate issue is blocking the connection.</span>
+      </a>
+    </div>
+    <a href="/guides.html" class="see-fixes" style="margin-top:14px;">See all 7 guides &rarr;</a>
   </section>
 
   <footer class="site-footer">
