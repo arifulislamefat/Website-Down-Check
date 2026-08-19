@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Just Migrated Hosts or DNS? Here's Why It's Flaky | Is It Down Right Now?</title>
+<meta name="description" content="A site that works intermittently right after a move between hosts is almost always a propagation issue, not a broken migration.">
+<link rel="canonical" href="https://isitdownnow.site/guides/dns-hosting-migration.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9601066719915484" crossorigin="anonymous"></script>
+<style>
+:root{
+  --bg:#05070a;
+  --surface:#0b0f16;
+  --surface-2:#101623;
+  --border:#1c2430;
+  --text:#e7edf3;
+  --muted:#7c8896;
+  --ok:#22d3ee;
+  --warn:#fbbf24;
+  --alert:#f87171;
+  --link:#22d3ee;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+  line-height:1.6;
+}
+.mono{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;}
+a{color:var(--link);text-decoration:none;}
+a:hover{text-decoration:underline;}
+a:focus-visible, button:focus-visible{outline:2px solid var(--ok);outline-offset:2px;}
+
+.wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+
+header.site{
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(34,211,238,0.06),transparent);
+}
+.nav{
+  max-width:760px;margin:0 auto;padding:18px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.brand{
+  font-weight:700;font-size:15px;letter-spacing:-0.01em;color:var(--text);
+  display:flex;align-items:center;gap:8px;
+}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);}
+.navlinks{display:flex;gap:22px;font-size:14px;flex-wrap:wrap;}
+.navlinks a{color:var(--muted);}
+.navlinks a.active,.navlinks a:hover{color:var(--text);}
+
+main{padding:48px 0 64px;}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--ok);background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.25);
+  padding:5px 12px;border-radius:999px;margin-bottom:18px;
+}
+.eyebrow.warn{color:var(--warn);background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.25);}
+.eyebrow.alert{color:var(--alert);background:rgba(248,113,113,0.08);border-color:rgba(248,113,113,0.25);}
+
+h1{
+  font-size:clamp(28px,4vw,38px);
+  line-height:1.15;letter-spacing:-0.02em;margin:0 0 14px;
+}
+h2{font-size:22px;margin:40px 0 12px;letter-spacing:-0.01em;}
+h3{font-size:17px;margin:24px 0 8px;color:var(--text);}
+p{color:#C7D0DB;margin:0 0 16px;}
+.lede{font-size:18px;color:var(--muted);margin-bottom:8px;}
+
+.probe{
+  font-family:"JetBrains Mono",monospace;font-size:13px;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:16px 18px;margin:20px 0 28px;overflow-x:auto;
+}
+.probe .ln{display:block;white-space:pre;color:var(--muted);}
+.probe .ln:not(:last-child){margin-bottom:4px;}
+.probe .ln .status-ok{color:var(--ok);}
+.probe .ln .status-warn{color:var(--warn);}
+.probe .ln .status-alert{color:var(--alert);}
+
+ul,ol{color:#C7D0DB;padding-left:22px;}
+li{margin-bottom:8px;}
+
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:20px 22px;margin:18px 0;
+}
+.checklist{list-style:none;padding-left:0;}
+.checklist li{
+  position:relative;padding-left:28px;
+}
+.checklist li::before{
+  content:"›";position:absolute;left:0;top:0;color:var(--ok);font-weight:700;
+}
+
+.guide-grid{display:grid;gap:14px;margin-top:24px;}
+.guide-card{
+  display:block;background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:18px 20px;color:var(--text);
+}
+.guide-card:hover{border-color:var(--ok);text-decoration:none;}
+.guide-card .tag{
+  font-size:11px;color:var(--muted);text-transform:uppercase;
+  display:block;margin-bottom:6px;letter-spacing:1px;font-weight:600;
+}
+.guide-card h3{margin:0 0 6px;font-size:16px;}
+.guide-card p{margin:0;font-size:14px;color:var(--muted);}
+
+.back{display:inline-block;margin-bottom:24px;font-size:14px;color:var(--muted);}
+.back:hover{color:var(--text);}
+
+footer{
+  border-top:1px solid var(--border);padding:32px 0;color:var(--muted);font-size:13px;
+}
+footer .foot-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+footer a{color:var(--muted);}
+footer a:hover{color:var(--text);}
+
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;}
+.btn{
+  font-size:14px;font-weight:600;
+  padding:10px 18px;border-radius:10px;border:1px solid var(--border);color:var(--text);
+}
+.btn.primary{background:var(--ok);color:#04141a;border-color:var(--ok);font-weight:700;}
+.btn.primary:hover{text-decoration:none;filter:brightness(1.08);}
+.btn:hover{border-color:var(--muted);text-decoration:none;}
+
+@media (max-width:600px){
+  .nav{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav">
+    <a class="brand" href="/">
+      <span class="dot"></span> isitdownnow.site
+    </a>
+    <nav class="navlinks">
+      <a href="/">Home</a>
+      <a href="/guides/" class="active">Guides</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <a class="back" href="/guides/">&larr; All guides</a>
+    <span class="eyebrow warn">MIGRATION &middot; PARTIAL_PROPAGATION</span>
+    <h1>Just Migrated Hosts or DNS? Here's Why It's Flaky</h1>
+    <div class="probe">
+    <span class="ln">$ dig example.com +short  # from location A</span>
+    <span class="ln"><span class="status-ok">203.0.113.10</span></span>
+    <span class="ln">$ dig example.com +short  # from location B</span>
+    <span class="ln"><span class="status-warn">198.51.100.24</span></span>
+    </div>
+    
+<p class="lede">Right after moving a domain to a new host or DNS provider,
+it's common for a site to work for some visitors and not others, or to show
+old content in some places and new content elsewhere. This is almost always
+propagation, not a broken migration.</p>
+
+<h2>Why this happens</h2>
+<p>DNS records are cached at multiple layers: your own device, your ISP's
+resolver, and resolvers around the world. When a record changes, each of
+those caches keeps serving the old answer until its TTL (time-to-live)
+expires. Until every cache has refreshed, different visitors can be routed
+to the old server and the new one simultaneously.</p>
+
+<h2>What to check after a migration</h2>
+<ul>
+  <li><strong>A and CNAME records point to the new host.</strong> Confirm
+  in your DNS provider's dashboard that every relevant record was actually
+  updated, not just the ones you remembered.</li>
+  <li><strong>The old host is still live during the transition.</strong>
+  Don't shut down or cancel the old hosting until you've confirmed
+  propagation is complete everywhere &mdash; visitors still hitting cached
+  old records need somewhere to land.</li>
+  <li><strong>SSL certificates are set up on the new host.</strong> A
+  certificate that worked on the old provider doesn't automatically carry
+  over; the new host needs its own valid certificate for the domain.</li>
+  <li><strong>Any CDN or proxy layer is also updated</strong> to point at
+  the new origin, if you use one in front of your hosting.</li>
+</ul>
+
+<h2>How to speed things along</h2>
+<ol>
+  <li>Lower the TTL on your DNS records a day or two before a planned
+  migration, so the cutover propagates faster once you make the change.</li>
+  <li>Use a propagation checker to see the record's value across multiple
+  regions at once, rather than only testing from your own device.</li>
+  <li>Clear your local DNS cache if you're testing from the same machine
+  repeatedly and suspect you're seeing a stale local result.</li>
+  <li>Give it time. Full global propagation can take anywhere from minutes
+  to about 48 hours depending on the previous TTL and resolver caching
+  behavior, even when every record is configured correctly.</li>
+</ol>
+
+<div class="card">
+  <strong>Quick checklist</strong>
+  <ul class="checklist">
+    <li>Confirm every relevant DNS record was updated, not just some</li>
+    <li>Keep the old host running until propagation is fully complete</li>
+    <li>Set up SSL on the new host separately &mdash; it doesn't transfer</li>
+    <li>Use a propagation checker instead of testing from one device only</li>
+  </ul>
+</div>
+
+    <div class="cta-row">
+      <a class="btn primary" href="/">Run a live check &rarr;</a>
+      <a class="btn" href="/guides/">More guides</a>
+    </div>
+    
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <span>Is It Down Right Now? &middot; &copy; 2026. All rights reserved.</span>
+    <span>
+      <a href="/privacy.html">Privacy Policy</a> &middot;
+      <a href="/contact.html">Contact</a> &middot;
+      <a href="/guides/">Guides</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>

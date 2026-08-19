@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About | Is It Down Right Now?</title>
+<meta name="description" content="What Is It Down Right Now? does, how the live check works, and who runs it.">
+<link rel="canonical" href="https://isitdownnow.site/about.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9601066719915484" crossorigin="anonymous"></script>
+<style>
+:root{
+  --bg:#05070a;
+  --surface:#0b0f16;
+  --surface-2:#101623;
+  --border:#1c2430;
+  --text:#e7edf3;
+  --muted:#7c8896;
+  --ok:#22d3ee;
+  --warn:#fbbf24;
+  --alert:#f87171;
+  --link:#22d3ee;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+  line-height:1.6;
+}
+.mono{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;}
+a{color:var(--link);text-decoration:none;}
+a:hover{text-decoration:underline;}
+a:focus-visible, button:focus-visible{outline:2px solid var(--ok);outline-offset:2px;}
+
+.wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+
+header.site{
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(34,211,238,0.06),transparent);
+}
+.nav{
+  max-width:760px;margin:0 auto;padding:18px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.brand{
+  font-weight:700;font-size:15px;letter-spacing:-0.01em;color:var(--text);
+  display:flex;align-items:center;gap:8px;
+}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);}
+.navlinks{display:flex;gap:22px;font-size:14px;flex-wrap:wrap;}
+.navlinks a{color:var(--muted);}
+.navlinks a.active,.navlinks a:hover{color:var(--text);}
+
+main{padding:48px 0 64px;}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--ok);background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.25);
+  padding:5px 12px;border-radius:999px;margin-bottom:18px;
+}
+.eyebrow.warn{color:var(--warn);background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.25);}
+.eyebrow.alert{color:var(--alert);background:rgba(248,113,113,0.08);border-color:rgba(248,113,113,0.25);}
+
+h1{
+  font-size:clamp(28px,4vw,38px);
+  line-height:1.15;letter-spacing:-0.02em;margin:0 0 14px;
+}
+h2{font-size:22px;margin:40px 0 12px;letter-spacing:-0.01em;}
+h3{font-size:17px;margin:24px 0 8px;color:var(--text);}
+p{color:#C7D0DB;margin:0 0 16px;}
+.lede{font-size:18px;color:var(--muted);margin-bottom:8px;}
+
+.probe{
+  font-family:"JetBrains Mono",monospace;font-size:13px;
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:16px 18px;margin:20px 0 28px;overflow-x:auto;
+}
+.probe .ln{display:block;white-space:pre;color:var(--muted);}
+.probe .ln:not(:last-child){margin-bottom:4px;}
+.probe .ln .status-ok{color:var(--ok);}
+.probe .ln .status-warn{color:var(--warn);}
+.probe .ln .status-alert{color:var(--alert);}
+
+ul,ol{color:#C7D0DB;padding-left:22px;}
+li{margin-bottom:8px;}
+
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:20px 22px;margin:18px 0;
+}
+.checklist{list-style:none;padding-left:0;}
+.checklist li{
+  position:relative;padding-left:28px;
+}
+.checklist li::before{
+  content:"›";position:absolute;left:0;top:0;color:var(--ok);font-weight:700;
+}
+
+.guide-grid{display:grid;gap:14px;margin-top:24px;}
+.guide-card{
+  display:block;background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:18px 20px;color:var(--text);
+}
+.guide-card:hover{border-color:var(--ok);text-decoration:none;}
+.guide-card .tag{
+  font-size:11px;color:var(--muted);text-transform:uppercase;
+  display:block;margin-bottom:6px;letter-spacing:1px;font-weight:600;
+}
+.guide-card h3{margin:0 0 6px;font-size:16px;}
+.guide-card p{margin:0;font-size:14px;color:var(--muted);}
+
+.back{display:inline-block;margin-bottom:24px;font-size:14px;color:var(--muted);}
+.back:hover{color:var(--text);}
+
+footer{
+  border-top:1px solid var(--border);padding:32px 0;color:var(--muted);font-size:13px;
+}
+footer .foot-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+footer a{color:var(--muted);}
+footer a:hover{color:var(--text);}
+
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;}
+.btn{
+  font-size:14px;font-weight:600;
+  padding:10px 18px;border-radius:10px;border:1px solid var(--border);color:var(--text);
+}
+.btn.primary{background:var(--ok);color:#04141a;border-color:var(--ok);font-weight:700;}
+.btn.primary:hover{text-decoration:none;filter:brightness(1.08);}
+.btn:hover{border-color:var(--muted);text-decoration:none;}
+
+@media (max-width:600px){
+  .nav{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav">
+    <a class="brand" href="/">
+      <span class="dot"></span> isitdownnow.site
+    </a>
+    <nav class="navlinks">
+      <a href="/">Home</a>
+      <a href="/guides/">Guides</a>
+      <a href="/about.html" class="active">About</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <span class="eyebrow">ABOUT</span>
+    <h1>About this tool</h1>
+    <p class="lede">Is It Down Right Now? is a small, independently run tool
+    for one specific question: is a site actually down, or is it just you?</p>
+
+    <p>Enter a URL and the checker sends a real HTTP request to that address
+    from our own servers, measuring the response time and status code. Because
+    the check runs from our infrastructure rather than your browser, it isn't
+    affected by your local internet connection, VPN, or network restrictions
+    &mdash; so it can tell the difference between a site that's genuinely
+    offline and one that's just unreachable from where you happen to be
+    sitting.</p>
+
+    <h2>Why it exists</h2>
+    <p>Most "is it down" tools either require an account, bury the result
+    behind ads and unrelated content, or only check a fixed list of popular
+    services. This one is built to do the opposite: no sign-up, one input
+    field, and a straight answer, whether the site you're checking is
+    Google or something only you and a handful of other people use.</p>
+
+    <h2>How the check works</h2>
+    <p>When you submit a URL, the server performs a direct HTTP request to
+    that address and waits up to 10 seconds for a response. A successful
+    response with a normal status code means the site is up from our
+    vantage point. No response within that window, a connection failure, or
+    a server error status is reported as down. The full breakdown of
+    specific causes and fixes lives in the <a href="/guides/">guides
+    section</a>.</p>
+
+    <h2>Who runs this</h2>
+    <p>This site is built and maintained independently, as static pages
+    deployed on Cloudflare Pages. If something looks wrong or you have a
+    suggestion, the <a href="/contact.html">contact page</a> has the way to
+    reach out.</p>
+
+    <div class="cta-row">
+      <a class="btn primary" href="/">Run a check &rarr;</a>
+      <a class="btn" href="/guides/">Browse guides</a>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <span>Is It Down Right Now? &middot; &copy; 2026. All rights reserved.</span>
+    <span>
+      <a href="/privacy.html">Privacy Policy</a> &middot;
+      <a href="/contact.html">Contact</a> &middot;
+      <a href="/guides/">Guides</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>
